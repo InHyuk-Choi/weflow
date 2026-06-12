@@ -5,30 +5,29 @@ import TestimonialCarousel from "@/components/public/TestimonialCarousel";
 import SuccessCaseCard from "@/components/public/SuccessCaseCard";
 import { getPublishedCases } from "@/lib/queries";
 import { PROCESS_4, PROCESS_6 } from "@/lib/process";
-import { placeholderImage } from "@/lib/sample-cases";
 
 export const revalidate = 0;
 
 const SMALL_BOXES = [
-  { title: "케어 플랜", desc: "제작·광고·운영" },
-  { title: "빠른제작", desc: "3일~7일" },
-  { title: "합리적 비용", desc: "가성비+퀄리티" },
+  { icon: "🧩", title: "케어 플랜", desc: "제작 · 광고 · 운영" },
+  { icon: "⚡", title: "빠른 제작", desc: "3일 ~ 7일" },
+  { icon: "💎", title: "합리적 비용", desc: "가성비 + 퀄리티" },
 ];
 
 const CARE_BENEFITS = [
-  "weflow 케어플랜",
-  "제작+운영+광고+관리 원터치",
-  "빠른 제작 (3~7일 로켓배송)",
-  "합리적인 가성비",
-  "24시간 상담대기 (빠른 상담 및 피드백)",
-  "운영 · 광고 지원 (사후관리서비스)",
+  { icon: "💼", title: "WEFLOW 케어플랜", desc: "올인원 케어 서비스" },
+  { icon: "🎯", title: "원터치 통합 관리", desc: "제작·운영·광고·관리" },
+  { icon: "🚀", title: "빠른 제작", desc: "3~7일 로켓배송" },
+  { icon: "💎", title: "합리적인 가성비", desc: "실속 + 퀄리티" },
+  { icon: "🕒", title: "24시간 상담대기", desc: "빠른 상담 및 피드백" },
+  { icon: "📈", title: "운영·광고 지원", desc: "사후관리 서비스" },
 ];
 
 const DELIVERY_FLOW = [
-  "고객 의뢰",
-  "접수 후 제작",
-  "3~7일 배송 완료",
-  "광고 및 운영 사후 관리",
+  { icon: "📝", title: "고객 의뢰", desc: "문의·상담 접수" },
+  { icon: "🛠️", title: "접수 후 제작", desc: "기획·디자인·개발" },
+  { icon: "🚚", title: "3~7일 배송 완료", desc: "빠르게 오픈" },
+  { icon: "📈", title: "광고 및 운영 사후 관리", desc: "지속 관리·성장" },
 ];
 
 const DIAGNOSIS_CHECKS = [
@@ -45,50 +44,68 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* Care-plan benefits: three small boxes + long 6-cell box */}
+      {/* Care-plan benefits */}
       <section className="section">
         <div className="container-page">
-          <div className="flex flex-wrap gap-3">
+          {/* Three highlight cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {SMALL_BOXES.map((b) => (
               <div
                 key={b.title}
-                className="rounded-xl border border-brand-100 bg-brand-50 px-5 py-3"
+                className="flex items-center gap-4 rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-5"
               >
-                <div className="font-bold text-brand-700">{b.title}</div>
-                <div className="text-sm text-slate-600">{b.desc}</div>
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand-600 text-2xl">
+                  {b.icon}
+                </span>
+                <div>
+                  <div className="font-bold text-slate-900">{b.title}</div>
+                  <div className="text-sm text-slate-500">{b.desc}</div>
+                </div>
               </div>
             ))}
           </div>
 
-          <h2 className="section-title mt-12 mb-5">WEFLOW만의 케어 플랜 혜택</h2>
-          {/* One row; scrolls horizontally on mobile */}
-          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:thin]">
-            {CARE_BENEFITS.map((c, i) => (
+          <div className="mt-14 mb-6 text-center">
+            <h2 className="section-title">WEFLOW만의 케어 플랜 혜택</h2>
+            <p className="mt-2 text-slate-500">
+              제작부터 운영·광고·관리까지 한 번에 해결합니다.
+            </p>
+          </div>
+
+          {/* 6 benefit cards — one row on desktop, horizontal scroll on mobile */}
+          <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin]">
+            {CARE_BENEFITS.map((c) => (
               <div
-                key={i}
-                className="flex min-w-[150px] flex-1 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-5 text-center text-sm font-medium text-slate-700 shadow-sm"
+                key={c.title}
+                className="flex min-w-[180px] flex-1 flex-col items-center rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
               >
-                {c}
+                <span className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-brand-50 text-2xl">
+                  {c.icon}
+                </span>
+                <div className="font-bold text-slate-900">{c.title}</div>
+                <div className="mt-1 text-xs text-slate-500">{c.desc}</div>
               </div>
             ))}
           </div>
 
-          {/* 4-step delivery flow with images */}
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* 4-step delivery flow — clean icon cards with arrows */}
+          <div className="mt-12 flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
             {DELIVERY_FLOW.map((step, i) => (
-              <div key={step} className="text-center">
-                <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-100">
-                  <Image
-                    src={placeholderImage(`flow-${i}`)}
-                    alt={step}
-                    fill
-                    sizes="(max-width:767px) 100vw, 25vw"
-                    className="object-cover"
-                  />
+              <div key={step.title} className="flex items-center gap-3 lg:flex-1">
+                <div className="flex w-full flex-col items-center rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm">
+                  <span className="mb-2 grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-2xl">
+                    {step.icon}
+                  </span>
+                  <div className="text-sm font-bold text-slate-900">
+                    {i + 1}. {step.title}
+                  </div>
+                  <div className="mt-1 text-xs text-slate-500">{step.desc}</div>
                 </div>
-                <div className="mt-2 text-sm font-semibold text-slate-800">
-                  {i + 1}. {step}
-                </div>
+                {i < DELIVERY_FLOW.length - 1 && (
+                  <span className="hidden shrink-0 text-2xl text-brand-300 lg:block">
+                    →
+                  </span>
+                )}
               </div>
             ))}
           </div>
