@@ -1,0 +1,74 @@
+// WEFLOW Website Platform — Prisma schema
+// Datasource uses Vercel Postgres pooled URL at runtime and the
+// non-pooling URL for migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  loginAttempts Int       @default(0)
+  lockedUntil   DateTime?
+
+  @@map("users")
+}
+
+model Reservation {
+  id                 String   @id @default(cuid())
+  date               DateTime
+  time               String // "HH:mm" (09:00–18:30, 30-min slots)
+  serviceType        String // 'landing_page' | 'homepage' | 'landing_and_homepage' | 'other'
+  name               String   @db.VarChar(100)
+  phone              String   @db.VarChar(20)
+  industry           String?  @db.VarChar(100)
+  additionalRequests String?  @db.Text
+  status             String   @default("pending") // 'pending' | 'in-progress' | 'completed'
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([date, time])
+  @@index([status])
+  @@index([createdAt])
+  @@map("reservations")
+}
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  phone       String   @db.VarChar(20)
+  email       String?  @db.VarChar(254)
+  serviceType String?  @db.VarChar(100)
+  industry    String?  @db.VarChar(100)
+  message     String   @db.Text
+  status      String   @default("pending") // 'pending' | 'in-progress' | 'completed'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("inquiries")
+}
+
+model SuccessCase {
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(100)
+  description String   @db.Text
+  imageUrl    String   @db.Text
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published])
+  @@map("success_cases")
+}
