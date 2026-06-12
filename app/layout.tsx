@@ -9,11 +9,16 @@ export const metadata: Metadata = {
   },
   description:
     "WEFLOW는 홈페이지·랜딩페이지 제작부터 광고 연동·운영 관리까지 문의 구조를 설계합니다. 빠른 제작과 합리적 비용, 24시간 상담을 제공합니다.",
+  icons: {
+    icon: "/main_icon.png",
+    apple: "/main_icon.png",
+  },
   openGraph: {
     title: "WEFLOW | 문의로 이어지는 홈페이지를 만듭니다",
     description:
       "홈페이지 제작부터 광고 연동·운영 관리까지. 단순 제작이 아닌 문의 구조까지 설계합니다.",
     type: "website",
+    images: ["/main_icon.png"],
   },
 };
 

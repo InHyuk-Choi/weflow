@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { clsx } from "clsx";
 
-// Text placeholder logo — real logo image swapped in later.
+// Brand logo: real logo icon (public/logo_icon.png) + WEFLOW wordmark.
 export default function Logo({
   className,
   href = "/",
@@ -14,21 +15,19 @@ export default function Logo({
   const inner = (
     <span
       className={clsx(
-        "inline-flex items-center gap-1 text-xl font-extrabold tracking-tight",
+        "inline-flex items-center gap-2 text-xl font-extrabold tracking-tight",
         variant === "light" ? "text-white" : "text-brand-700",
         className
       )}
     >
-      <span
-        className={clsx(
-          "grid h-7 w-7 place-items-center rounded-lg text-sm font-black",
-          variant === "light"
-            ? "bg-white text-brand-700"
-            : "bg-brand-600 text-white"
-        )}
-      >
-        W
-      </span>
+      <Image
+        src="/logo_icon.png"
+        alt="WEFLOW"
+        width={32}
+        height={32}
+        className="h-8 w-8 rounded-lg object-contain"
+        priority
+      />
       WEFLOW
     </span>
   );

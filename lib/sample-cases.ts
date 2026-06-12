@@ -1,37 +1,44 @@
-// Sample success-case industries from the WEFLOW manual (no medical content).
-// Used by the seed script and as fallbacks. Images use a deterministic
-// placeholder service.
+// Success-case industries from the WEFLOW manual (no medical content).
+// Each has a `slug` used as the image filename in `public/cases/<slug>.<ext>`.
 
-export const CASE_INDUSTRIES = [
-  "PT샵",
-  "필라테스",
-  "헬스장",
-  "보험 설계",
-  "법률 사무소",
-  "자동차 디테일링",
-  "렌터카 업체",
-  "웨딩/스냅 업체",
-  "세무사 사무소",
-  "공인중개사",
-  "카페",
-  "미용실",
-  "네일샵",
-  "소상공인 기업형 홈페이지",
-  "피부관리샵",
-  "왁싱샵",
-  "반영구샵",
-  "애견미용",
-  "반려동물 용품점",
-  "인테리어 업체",
-  "이사 업체",
-  "키즈카페",
-  "스터디카페",
-  "영어학원",
-  "수학학원",
-  "입시학원",
-  "개인과외",
-  "청소업체",
+export interface CaseDef {
+  name: string;
+  slug: string;
+}
+
+export const CASE_LIST: CaseDef[] = [
+  { name: "PT샵", slug: "pt" },
+  { name: "필라테스", slug: "pilates" },
+  { name: "헬스장", slug: "gym" },
+  { name: "보험 설계", slug: "insurance" },
+  { name: "법률 사무소", slug: "law" },
+  { name: "자동차 디테일링", slug: "cardetailing" },
+  { name: "렌터카 업체", slug: "rentcar" },
+  { name: "웨딩/스냅 업체", slug: "wedding" },
+  { name: "세무사 사무소", slug: "tax" },
+  { name: "공인중개사", slug: "realestate" },
+  { name: "카페", slug: "cafe" },
+  { name: "미용실", slug: "hairsalon" },
+  { name: "네일샵", slug: "nail" },
+  { name: "소상공인 기업형 홈페이지", slug: "business" },
+  { name: "피부관리샵", slug: "skincare" },
+  { name: "왁싱샵", slug: "waxing" },
+  { name: "반영구샵", slug: "semipermanent" },
+  { name: "애견미용", slug: "petgrooming" },
+  { name: "반려동물 용품점", slug: "petshop" },
+  { name: "인테리어 업체", slug: "interior" },
+  { name: "이사 업체", slug: "moving" },
+  { name: "키즈카페", slug: "kidscafe" },
+  { name: "스터디카페", slug: "studycafe" },
+  { name: "영어학원", slug: "english" },
+  { name: "수학학원", slug: "math" },
+  { name: "입시학원", slug: "academy" },
+  { name: "개인과외", slug: "tutoring" },
+  { name: "청소업체", slug: "cleaning" },
 ];
+
+// Backward-compatible list of just the names.
+export const CASE_INDUSTRIES = CASE_LIST.map((c) => c.name);
 
 export function placeholderImage(seed: string, w = 800, h = 600): string {
   // picsum provides stable images per seed; safe, non-medical imagery.
