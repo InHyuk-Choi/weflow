@@ -7,9 +7,9 @@ import { clsx } from "clsx";
 import Logo from "@/components/public/Logo";
 
 const NAV = [
-  { href: "/admin", label: "대시보드", icon: "📊" },
-  { href: "/admin/reservations", label: "예약 관리", icon: "📅" },
-  { href: "/admin/inquiries", label: "문의 관리", icon: "✉️" },
+  { href: "/admin", label: "대시보드" },
+  { href: "/admin/reservations", label: "예약 관리" },
+  { href: "/admin/inquiries", label: "문의 관리" },
 ];
 
 export default function AdminSidebar({ username }: { username: string }) {
@@ -32,13 +32,12 @@ export default function AdminSidebar({ username }: { username: string }) {
               key={n.href}
               href={n.href}
               className={clsx(
-                "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition",
+                "block rounded-xl px-4 py-2.5 text-sm font-medium transition",
                 isActive(n.href)
                   ? "bg-brand-600 text-white shadow-sm"
                   : "text-slate-600 hover:bg-slate-50"
               )}
             >
-              <span>{n.icon}</span>
               {n.label}
             </Link>
           ))}
