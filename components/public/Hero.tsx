@@ -41,9 +41,9 @@ export default function Hero() {
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/70 px-3 py-1 text-xs font-semibold text-brand-700 backdrop-blur md:text-sm">
             랜딩&홈페이지 · 광고 운영 · 검색 상단 노출
           </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-[1.15] tracking-tight text-slate-900 md:text-6xl">
+          <h1 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
             <span className="block whitespace-nowrap">문의로 이어지는</span>
-            <span className="block whitespace-nowrap bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent">
+            <span className="block whitespace-nowrap bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text pb-1 text-transparent">
               홈페이지를 만듭니다
             </span>
           </h1>
