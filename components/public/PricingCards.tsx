@@ -156,18 +156,20 @@ export default function PricingCards({ showNotices = true }: { showNotices?: boo
         </div>
       </div>
 
-      {/* Centered booking button at the bottom — appears only after a plan is selected */}
+      {/* Floating booking bar — fixed at bottom-center, always visible without scrolling */}
       {selected && (
-        <div className="flex flex-col items-center gap-2 pt-2">
-          <p className="text-sm text-slate-500">
-            선택한 플랜: <b className="text-brand-700">{selected}</b>
-          </p>
-          <Link
-            href={`/booking?plan=${encodeURIComponent(selected)}`}
-            className="btn-primary px-8 py-4 text-lg"
-          >
-            이 플랜으로 예약하기 →
-          </Link>
+        <div className="pointer-events-none fixed inset-x-0 bottom-20 z-40 flex justify-center px-4">
+          <div className="animate-fade-up pointer-events-auto flex items-center gap-3 rounded-full border border-white/40 bg-white/80 py-2 pl-5 pr-2 shadow-2xl shadow-brand-900/20 backdrop-blur-xl">
+            <span className="text-sm text-slate-600">
+              선택: <b className="text-brand-700">{selected}</b>
+            </span>
+            <Link
+              href={`/booking?plan=${encodeURIComponent(selected)}`}
+              className="btn-primary"
+            >
+              예약하기 →
+            </Link>
+          </div>
         </div>
       )}
 

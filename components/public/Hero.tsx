@@ -1,12 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useRef, useState } from "react";
 
-// Home hero — modern layout with decorative gradient blobs.
+// Home hero — futuristic look with a cursor-following spotlight,
+// decorative gradient blobs, and a gently floating brand image.
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const [pos, setPos] = useState({ x: -500, y: -500 });
+
+  function handleMove(e: React.MouseEvent<HTMLElement>) {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-100">
+    <section
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseLeave={() => setPos({ x: -500, y: -500 })}
+      className="relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-100"
+    >
+      {/* Cursor-following spotlight */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-[background] duration-200"
+        style={{
+          background: `radial-gradient(550px circle at ${pos.x}px ${pos.y}px, rgba(37,99,235,0.14), transparent 45%)`,
+        }}
+      />
+
       {/* Decorative blurred blobs */}
-      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-brand-300/30 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 animate-float rounded-full bg-brand-300/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-brand-400/20 blur-3xl" />
 
       <div className="container-page relative grid items-center gap-10 py-16 md:py-24 lg:grid-cols-2">
@@ -40,9 +66,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right: large brand image */}
+        {/* Right: large brand image, gently floating */}
         <div className="flex justify-center lg:justify-end">
-          <div className="relative">
+          <div className="relative animate-float">
             <div className="absolute inset-0 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-brand-200/40 to-transparent blur-2xl" />
             <Image
               src="/main_icon.png"
