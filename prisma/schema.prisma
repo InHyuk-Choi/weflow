@@ -59,16 +59,3 @@ model Inquiry {
   @@index([createdAt])
   @@map("inquiries")
 }
-
-model SuccessCase {
-  id          String   @id @default(cuid())
-  title       String   @db.VarChar(100)
-  description String   @db.Text
-  imageUrl    String   @db.Text
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([published])
-  @@map("success_cases")
-}

@@ -17,9 +17,6 @@ export default function AdminHeader({ username }: { username: string }) {
             <Link href="/admin" className="hover:text-brand-700">
               대시보드
             </Link>
-            <Link href="/admin/success-cases" className="hover:text-brand-700">
-              CASE 관리
-            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">

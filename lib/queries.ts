@@ -1,5 +1,4 @@
-import { prisma } from "./db";
-import { CASE_INDUSTRIES, placeholderImage, caseDescription } from "./sample-cases";
+import { CASE_LIST, caseDescription } from "./sample-cases";
 
 export interface DisplayCase {
   id: string;
@@ -8,60 +7,23 @@ export interface DisplayCase {
   description: string;
 }
 
-// Fetch published success cases; on any DB error (e.g. no DB configured during
-// local preview) fall back to manual-derived sample cases so pages still render.
+// Success cases are code-driven (no DB/admin). Each industry maps to a
+// /public/cases/<slug>.jpg image. The slug doubles as the route id.
+function toCase(c: { name: string; slug: string }): DisplayCase {
+  return {
+    id: c.slug,
+    title: `${c.name} 성공 사례`,
+    imageUrl: `/cases/${c.slug}.jpg`,
+    description: caseDescription(c.name),
+  };
+}
+
 export async function getPublishedCases(limit?: number): Promise<DisplayCase[]> {
-  try {
-    const rows = await prisma.successCase.findMany({
-      where: { published: true },
-      orderBy: { createdAt: "desc" },
-      ...(limit ? { take: limit } : {}),
-    });
-    if (rows.length > 0) {
-      return rows.map((r) => ({
-        id: r.id,
-        title: r.title,
-        imageUrl: r.imageUrl,
-        description: r.description,
-      }));
-    }
-  } catch {
-    // fall through to sample data
-  }
-  const industries = limit ? CASE_INDUSTRIES.slice(0, limit) : CASE_INDUSTRIES;
-  return industries.map((industry) => ({
-    id: `sample-${encodeURIComponent(industry)}`,
-    title: `${industry} 성공 사례`,
-    imageUrl: placeholderImage(industry),
-    description: caseDescription(industry),
-  }));
+  const list = limit ? CASE_LIST.slice(0, limit) : CASE_LIST;
+  return list.map(toCase);
 }
 
 export async function getCaseById(id: string): Promise<DisplayCase | null> {
-  try {
-    const r = await prisma.successCase.findUnique({ where: { id } });
-    if (r) {
-      return {
-        id: r.id,
-        title: r.title,
-        imageUrl: r.imageUrl,
-        description: r.description,
-      };
-    }
-  } catch {
-    // fall through
-  }
-  // Sample fallback for `sample-<industry>` ids.
-  if (id.startsWith("sample-")) {
-    const industry = decodeURIComponent(id.replace("sample-", ""));
-    if (CASE_INDUSTRIES.includes(industry)) {
-      return {
-        id,
-        title: `${industry} 성공 사례`,
-        imageUrl: placeholderImage(industry, 1200, 800),
-        description: caseDescription(industry),
-      };
-    }
-  }
-  return null;
+  const c = CASE_LIST.find((x) => x.slug === id);
+  return c ? toCase(c) : null;
 }
