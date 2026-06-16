@@ -3,7 +3,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { clsx } from "clsx";
 import {
-  STATUSES,
   statusLabel,
   serviceTypeLabel,
   POLLING_INTERVAL,
@@ -22,8 +21,6 @@ interface Inquiry {
   createdAt: string;
 }
 
-const FILTERS = [{ value: "all", label: "전체" }, ...STATUSES];
-
 function statusColor(status: string) {
   return status === "completed"
     ? "bg-green-100 text-green-700"
@@ -32,15 +29,20 @@ function statusColor(status: string) {
       : "bg-slate-100 text-slate-600";
 }
 
-export default function InquiryTable() {
+export default function InquiryTable({
+  statusFilter = "all",
+  search = "",
+}: {
+  statusFilter?: string;
+  search?: string;
+}) {
   const [rows, setRows] = useState<Inquiry[]>([]);
-  const [filter, setFilter] = useState("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch(`/api/inquiries?status=${filter}&pageSize=100`);
+      const res = await fetch(`/api/inquiries?status=${statusFilter}&pageSize=100`);
       if (res.ok) {
         const data = await res.json();
         setRows(data.inquiries);
@@ -48,7 +50,7 @@ export default function InquiryTable() {
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [statusFilter]);
 
   useEffect(() => {
     load();
@@ -73,60 +75,53 @@ export default function InquiryTable() {
     if (!res.ok) load();
   }
 
+  const q = search.trim().toLowerCase();
+  const visible = q
+    ? rows.filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) || r.phone.toLowerCase().includes(q)
+      )
+    : rows;
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-5">
         <h2 className="text-lg font-bold text-slate-900">
-          문의 관리 <span className="text-sm font-normal text-slate-400">({rows.length})</span>
+          문의 관리{" "}
+          <span className="text-sm font-normal text-slate-400">
+            ({visible.length})
+          </span>
         </h2>
-        <div className="flex items-center gap-2">
-          <div className="flex rounded-lg border border-slate-200 p-0.5">
-            {FILTERS.map((f) => (
-              <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
-                className={clsx(
-                  "rounded-md px-3 py-1 text-sm",
-                  filter === f.value
-                    ? "bg-brand-600 text-white"
-                    : "text-slate-600 hover:bg-slate-50"
-                )}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-          <ExportButton
-            endpoint="/api/inquiries/export"
-            label="문의 엑셀 다운"
-            filename="weflow-inquiries.xlsx"
-          />
-        </div>
+        <ExportButton
+          endpoint="/api/inquiries/export"
+          label="엑셀 다운로드"
+          filename="weflow-inquiries.xlsx"
+        />
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-sm">
           <thead>
             <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
-              <th className="px-4 py-3">상태</th>
-              <th className="px-4 py-3">이름</th>
-              <th className="px-4 py-3">연락처</th>
-              <th className="px-4 py-3">접수일</th>
-              <th className="px-4 py-3">관리</th>
+              <th className="px-5 py-3">상태</th>
+              <th className="px-5 py-3">이름</th>
+              <th className="px-5 py-3">연락처</th>
+              <th className="px-5 py-3">접수일</th>
+              <th className="px-5 py-3">관리</th>
             </tr>
           </thead>
           <tbody>
-            {rows.length === 0 && (
+            {visible.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-slate-400">
-                  {loading ? "불러오는 중..." : "문의가 없습니다."}
+                <td colSpan={5} className="px-5 py-12 text-center text-slate-400">
+                  {loading ? "불러오는 중..." : "데이터가 없습니다"}
                 </td>
               </tr>
             )}
-            {rows.map((r) => (
+            {visible.map((r) => (
               <Fragment key={r.id}>
                 <tr className="border-b border-slate-50">
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3">
                     <span
                       className={clsx(
                         "rounded-full px-2 py-1 text-xs font-medium",
@@ -136,18 +131,20 @@ export default function InquiryTable() {
                       {statusLabel(r.status)}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-medium text-slate-800">{r.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{r.phone}</td>
-                  <td className="px-4 py-3 text-slate-500">
+                  <td className="px-5 py-3 font-medium text-slate-800">{r.name}</td>
+                  <td className="px-5 py-3 text-slate-600">{r.phone}</td>
+                  <td className="px-5 py-3 text-slate-500">
                     {new Date(r.createdAt).toLocaleDateString("ko-KR")}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3">
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => updateStatus(r.id, "completed")}
-                        className="rounded border border-green-200 px-2 py-1 text-xs text-green-700 hover:bg-green-50"
+                        onClick={() =>
+                          setExpanded(expanded === r.id ? null : r.id)
+                        }
+                        className="rounded border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
                       >
-                        완료
+                        상세 {expanded === r.id ? "▲" : "▼"}
                       </button>
                       <button
                         onClick={() => updateStatus(r.id, "in-progress")}
@@ -156,26 +153,23 @@ export default function InquiryTable() {
                         진행중
                       </button>
                       <button
+                        onClick={() => updateStatus(r.id, "completed")}
+                        className="rounded border border-green-200 px-2 py-1 text-xs text-green-700 hover:bg-green-50"
+                      >
+                        완료
+                      </button>
+                      <button
                         onClick={() => remove(r.id)}
                         className="rounded border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
                       >
                         삭제
-                      </button>
-                      <button
-                        onClick={() =>
-                          setExpanded(expanded === r.id ? null : r.id)
-                        }
-                        aria-label="상세보기"
-                        className="rounded px-1 py-1 text-slate-400 hover:text-slate-700"
-                      >
-                        {expanded === r.id ? "▲" : "▼"}
                       </button>
                     </div>
                   </td>
                 </tr>
                 {expanded === r.id && (
                   <tr className="bg-slate-50">
-                    <td colSpan={5} className="px-4 py-3 text-sm text-slate-600">
+                    <td colSpan={5} className="px-5 py-3 text-sm text-slate-600">
                       <div className="grid gap-1 sm:grid-cols-3">
                         <div>
                           <span className="text-slate-400">제작 종류 : </span>

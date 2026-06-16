@@ -17,10 +17,14 @@ export default async function SuccessCasesPage() {
   return (
     <div className="section">
       <div className="container-page">
-        <header className="mb-10 text-center">
-          <h1 className="section-title">성공사례</h1>
-          <p className="mt-2 text-slate-600">
-            업종별 전환 최적화 사례를 직접 확인하세요.
+        <header className="mb-12 text-center">
+          <span className="inline-block rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
+            SUCCESS CASES
+          </span>
+          <h1 className="section-title mt-3">성공사례</h1>
+          <p className="mx-auto mt-3 max-w-xl text-slate-500">
+            업종별 전환 최적화 사례를 확인하고, 우리 업종에 맞는 제작 방향을
+            살펴보세요.
           </p>
         </header>
 
