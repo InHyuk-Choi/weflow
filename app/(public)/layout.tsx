@@ -1,6 +1,7 @@
 import Navigation from "@/components/public/Navigation";
 import StickyBottomNav from "@/components/public/StickyBottomNav";
 import Footer from "@/components/public/Footer";
+import CursorGlow from "@/components/public/CursorGlow";
 
 export default function PublicLayout({
   children,
@@ -9,6 +10,7 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      <CursorGlow />
       <Navigation />
       <main className="min-h-screen">{children}</main>
       <Footer />
