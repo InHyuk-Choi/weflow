@@ -42,34 +42,62 @@ export default function CursorGlow() {
     let lastX = 0;
     let lastY = 0;
 
-    const spawn = (x: number, y: number, n: number) => {
-      for (let i = 0; i < n; i++) {
-        particles.push({
-          x: x + (Math.random() - 0.5) * 8,
-          y: y + (Math.random() - 0.5) * 8,
-          vx: (Math.random() - 0.5) * 1.2,
-          vy: -0.6 - Math.random() * 1.4, // drift upward
-          life: 0,
-          max: 500 + Math.random() * 500,
-          size: 1.5 + Math.random() * 3,
-          hue: 210 + Math.random() * 30, // blue range
-        });
-      }
-      // cap
-      if (particles.length > 240) particles.splice(0, particles.length - 240);
+    const add = (
+      x: number,
+      y: number,
+      vx: number,
+      vy: number,
+      size: number,
+      max: number
+    ) => {
+      particles.push({
+        x,
+        y,
+        vx,
+        vy,
+        life: 0,
+        max,
+        size,
+        hue: 210 + Math.random() * 30, // blue range
+      });
+      if (particles.length > 260) particles.splice(0, particles.length - 260);
     };
 
+    // Gentle trail: one drifting-up sparkle, a touch longer-lived.
     const onMove = (e: MouseEvent) => {
-      const dx = e.clientX - lastX;
-      const dy = e.clientY - lastY;
-      const dist = Math.hypot(dx, dy);
-      if (dist > 6) {
-        spawn(e.clientX, e.clientY, 2);
+      const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+      if (dist > 12) {
+        add(
+          e.clientX + (Math.random() - 0.5) * 6,
+          e.clientY + (Math.random() - 0.5) * 6,
+          (Math.random() - 0.5) * 1.0,
+          -0.6 - Math.random() * 1.2,
+          1.5 + Math.random() * 3,
+          900 + Math.random() * 700
+        );
         lastX = e.clientX;
         lastY = e.clientY;
       }
     };
     window.addEventListener("mousemove", onMove);
+
+    // Click burst: particles radiate outward.
+    const onDown = (e: MouseEvent) => {
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.3;
+        const speed = 2 + Math.random() * 3;
+        add(
+          e.clientX,
+          e.clientY,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed,
+          2 + Math.random() * 3,
+          600 + Math.random() * 500
+        );
+      }
+    };
+    window.addEventListener("mousedown", onDown);
 
     let raf = 0;
     let prev = performance.now();
@@ -110,6 +138,7 @@ export default function CursorGlow() {
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
       cancelAnimationFrame(raf);
     };
   }, []);
