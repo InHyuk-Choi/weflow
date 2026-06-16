@@ -28,16 +28,6 @@ export async function generateMetadata({
   };
 }
 
-const RES_TIMES = ["오전 10:00", "오후 1:00", "오후 4:00", "오후 7:00", "오후 9:00"];
-const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
-
-// Next 5 days (KST), formatted "M.D (요일)".
-function next5Days(): string[] {
-  return Array.from({ length: 5 }, (_, i) => {
-    const d = new Date(Date.now() + 9 * 3600 * 1000 + i * 86400000);
-    return `${d.getUTCMonth() + 1}.${d.getUTCDate()} (${WEEKDAYS[d.getUTCDay()]})`;
-  });
-}
 
 export default async function SuccessCaseDetailPage({
   params,
@@ -54,7 +44,6 @@ export default async function SuccessCaseDetailPage({
   const reviews = [0, 1, 2].map(
     (i) => TESTIMONIALS[(seed + i) % TESTIMONIALS.length]
   );
-  const resDates = next5Days();
 
   return (
     <div>
@@ -186,37 +175,6 @@ export default async function SuccessCaseDetailPage({
                 </figcaption>
               </figure>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Reservation preview */}
-      <section className="section bg-slate-50">
-        <div className="container-page max-w-2xl">
-          <h2 className="section-title mb-6 text-center">예약 안내</h2>
-          <div className="card">
-            <div className="mb-2 text-sm font-medium text-slate-700">예약 가능 날짜</div>
-            <div className="mb-5 flex flex-wrap gap-2">
-              {resDates.map((d) => (
-                <span
-                  key={d}
-                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
-                >
-                  {d}
-                </span>
-              ))}
-            </div>
-            <div className="mb-2 text-sm font-medium text-slate-700">예약 가능 시간</div>
-            <div className="flex flex-wrap gap-2">
-              {RES_TIMES.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
