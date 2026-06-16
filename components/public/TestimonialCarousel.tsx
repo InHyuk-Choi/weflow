@@ -14,9 +14,9 @@ function Row({
   // Duplicate the list so the -50% translate loops without a visible gap.
   const doubled = [...items, ...items];
   return (
-    <div className="group overflow-hidden">
+    <div className="overflow-hidden">
       <div
-        className={`flex w-max gap-4 ${
+        className={`flex w-max gap-4 [animation-play-state:running] hover:[animation-play-state:paused] ${
           reverse ? "animate-marquee-reverse" : "animate-marquee"
         }`}
       >

@@ -22,23 +22,19 @@ function Card({
       onClick={onSelect}
       className={clsx(
         "relative flex flex-col rounded-2xl bg-white p-6 transition",
-        // Recommended → amber/gold accent (distinct from blue selection)
         card.highlight
           ? "border-2 border-amber-400 shadow-[0_8px_30px_-12px_rgba(245,158,11,0.5)]"
           : "border border-slate-200 shadow-sm",
-        // Selected → blue ring + lift
         selected && "ring-2 ring-brand-600 ring-offset-2",
         selectable && "cursor-pointer hover:-translate-y-0.5 hover:shadow-md"
       )}
     >
-      {/* Recommended badge (amber crown) */}
       {card.highlight && (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-400 px-3 py-1 text-xs font-bold text-amber-950 shadow">
           👑 추천 BEST
         </span>
       )}
 
-      {/* Selected check (blue, top-right) */}
       {selectable && (
         <span
           className={clsx(
@@ -79,7 +75,6 @@ function Card({
         ))}
       </ul>
 
-      {/* Two-line discounted price */}
       <div className="mt-auto border-t border-dashed border-slate-200 pt-4">
         <div className="text-sm text-slate-400 line-through">
           {card.originalPrice}
@@ -98,10 +93,18 @@ function Card({
   );
 }
 
-// A required single-select (1-of-3) group with checkmarks.
-// Nothing is selected initially; selecting a plan reveals the 예약하기 button.
-function SelectGroup({ title, cards }: { title: string; cards: PriceCard[] }) {
-  const [selected, setSelected] = useState<string>("");
+// Controlled single-select group (selection state lives in the parent).
+function SelectGroup({
+  title,
+  cards,
+  selected,
+  onSelect,
+}: {
+  title: string;
+  cards: PriceCard[];
+  selected: string;
+  onSelect: (name: string) => void;
+}) {
   return (
     <div>
       <div className="mb-5">
@@ -117,34 +120,32 @@ function SelectGroup({ title, cards }: { title: string; cards: PriceCard[] }) {
             card={card}
             selectable
             selected={selected === card.name}
-            onSelect={() => setSelected(card.name)}
+            onSelect={() => onSelect(card.name)}
           />
         ))}
       </div>
-
-      {/* Booking button appears only after a plan is selected */}
-      {selected && (
-        <div className="mt-6 flex flex-col items-center gap-2">
-          <p className="text-sm text-slate-500">
-            선택한 플랜: <b className="text-brand-700">{selected}</b>
-          </p>
-          <Link
-            href={`/booking?plan=${encodeURIComponent(selected)}`}
-            className="btn-primary"
-          >
-            이 플랜으로 예약하기 →
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
 
 export default function PricingCards({ showNotices = true }: { showNotices?: boolean }) {
+  // Single global selection across all plan cards.
+  const [selected, setSelected] = useState<string>("");
+
   return (
     <div className="space-y-16">
-      <SelectGroup title="제작 플랜" cards={BUILD_TIERS} />
-      <SelectGroup title="WEFLOW 케어플랜" cards={CARE_TIERS} />
+      <SelectGroup
+        title="제작 플랜"
+        cards={BUILD_TIERS}
+        selected={selected}
+        onSelect={setSelected}
+      />
+      <SelectGroup
+        title="WEFLOW 케어플랜"
+        cards={CARE_TIERS}
+        selected={selected}
+        onSelect={setSelected}
+      />
 
       <div>
         <h2 className="mb-5 section-title">광고 세팅</h2>
@@ -154,6 +155,21 @@ export default function PricingCards({ showNotices = true }: { showNotices?: boo
           ))}
         </div>
       </div>
+
+      {/* Centered booking button at the bottom — appears only after a plan is selected */}
+      {selected && (
+        <div className="flex flex-col items-center gap-2 pt-2">
+          <p className="text-sm text-slate-500">
+            선택한 플랜: <b className="text-brand-700">{selected}</b>
+          </p>
+          <Link
+            href={`/booking?plan=${encodeURIComponent(selected)}`}
+            className="btn-primary px-8 py-4 text-lg"
+          >
+            이 플랜으로 예약하기 →
+          </Link>
+        </div>
+      )}
 
       {showNotices && (
         <ul className="space-y-2 rounded-2xl bg-slate-50 p-6 text-sm text-slate-600">
