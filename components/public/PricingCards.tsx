@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { clsx } from "clsx";
 import type { PriceCard } from "@/lib/pricing";
 import { BUILD_TIERS, CARE_TIERS, AD_TIERS, PRICING_NOTICES } from "@/lib/pricing";
@@ -98,8 +99,9 @@ function Card({
 }
 
 // A required single-select (1-of-3) group with checkmarks.
+// Nothing is selected initially; selecting a plan reveals the 예약하기 button.
 function SelectGroup({ title, cards }: { title: string; cards: PriceCard[] }) {
-  const [selected, setSelected] = useState<string>(cards[0]?.name ?? "");
+  const [selected, setSelected] = useState<string>("");
   return (
     <div>
       <div className="mb-5">
@@ -119,6 +121,21 @@ function SelectGroup({ title, cards }: { title: string; cards: PriceCard[] }) {
           />
         ))}
       </div>
+
+      {/* Booking button appears only after a plan is selected */}
+      {selected && (
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <p className="text-sm text-slate-500">
+            선택한 플랜: <b className="text-brand-700">{selected}</b>
+          </p>
+          <Link
+            href={`/booking?plan=${encodeURIComponent(selected)}`}
+            className="btn-primary"
+          >
+            이 플랜으로 예약하기 →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

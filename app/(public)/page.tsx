@@ -9,18 +9,18 @@ import { PROCESS_4, PROCESS_6 } from "@/lib/process";
 export const revalidate = 0;
 
 const SMALL_BOXES = [
-  { icon: "🧩", title: "케어 플랜", desc: "제작 · 광고 · 운영" },
-  { icon: "⚡", title: "빠른 제작", desc: "3일 ~ 7일" },
-  { icon: "💎", title: "합리적 비용", desc: "가성비 + 퀄리티" },
+  { icon: "🛡️", title: "케어 플랜", desc: "제작 · 광고 · 운영" },
+  { icon: "⏱️", title: "빠른 제작", desc: "3일 ~ 7일" },
+  { icon: "🏷️", title: "합리적 비용", desc: "가성비 + 퀄리티" },
 ];
 
 const CARE_BENEFITS = [
-  { icon: "💼", title: "WEFLOW 케어플랜", desc: "올인원 케어 서비스" },
-  { icon: "🎯", title: "원터치 통합 관리", desc: "제작·운영·광고·관리" },
-  { icon: "🚀", title: "빠른 제작", desc: "3~7일 로켓배송" },
-  { icon: "💎", title: "합리적인 가성비", desc: "실속 + 퀄리티" },
-  { icon: "🕒", title: "24시간 상담대기", desc: "빠른 상담 및 피드백" },
-  { icon: "📈", title: "운영·광고 지원", desc: "사후관리 서비스" },
+  { icon: "⭐", title: "WEFLOW 케어플랜", desc: "올인원 케어 서비스" },
+  { icon: "🎛️", title: "원터치 통합 관리", desc: "제작·운영·광고·관리" },
+  { icon: "🏎️", title: "빠른 제작", desc: "3~7일 로켓배송" },
+  { icon: "💸", title: "합리적인 가성비", desc: "실속 + 퀄리티" },
+  { icon: "💬", title: "24시간 상담대기", desc: "빠른 상담 및 피드백" },
+  { icon: "📣", title: "운영·광고 지원", desc: "사후관리 서비스" },
 ];
 
 const DELIVERY_FLOW = [

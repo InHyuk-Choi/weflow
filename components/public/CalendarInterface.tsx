@@ -172,7 +172,7 @@ export default function CalendarInterface() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
+    <div className="mx-auto max-w-2xl space-y-8">
       {/* Month calendar + time slot grid */}
       <div>
         <h2 className="mb-3 font-bold text-slate-900">날짜 선택</h2>

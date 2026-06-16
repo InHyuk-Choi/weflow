@@ -43,13 +43,4 @@ body {
   .card {
     @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
   }
-
-  /* Hide the marquee track for users who prefer reduced motion. */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee,
-  .animate-marquee-reverse {
-    animation: none;
-  }
 }
